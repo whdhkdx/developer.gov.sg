@@ -13,10 +13,14 @@ webinars:
 
   - name: >
       STACK-X: Meetup - Zero-Knowledge Proof
-    description: >
+    description: |
       A speaker from GovTech teaches audiences how zero-knowledge proof works,
       how they can be used for new privacy-preserving techniques, and demonstrates
-      building an application that leverages zero-knowledge proof.
+      building an application that leverages zero-knowledge proof. For more details
+      on ZKP, read [part 1]() and [part 2]() of the ZKP article.
+
+      - Read [part 1 here]().
+      - Read [part 2 here]().
     video_id: ewUs2fqBGhI
     date: 2020-06-25
 
@@ -85,7 +89,7 @@ webinars:
           </figure>
         </div>
         <p>
-          <strong>{{ webinar.date | date_to_string }}</strong>&nbsp;{{ webinar.description }}
+          <strong>{{ webinar.date | date_to_string }}</strong>&nbsp;{{ webinar.description | markdownify }}
         </p>
       </div>
       <div class="sgds-card-footer">
