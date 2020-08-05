@@ -1,0 +1,656 @@
+<h2>
+  <strong
+    >STACK-X Webinar — An Introduction to Building Secure Mobile Apps</strong
+  >
+</h2>
+<p>
+  <em
+    >The following article was adapted from a STACK-X Webinar conducted by the
+    mobile application penetration testing team from GovTech’s Cyber Security
+    Group (CSG), on 16 July, 2020.</em
+  >
+</p>
+<p><br /></p>
+<h3><strong>So you want to build a (secure) app</strong></h3>
+<p>
+  That’s great! Tapping into the vast, ever-expanding user base of smartphone
+  owners is always a great move, especially with most users today actually
+  <em>preferring</em> to handle most of their day-to-day tasks from these handy
+  devices.
+</p>
+<p>
+  However, it’s vital that you don't overlook security during the development of
+  your app. While it might seem like modern mobile operating systems are already
+  packed with strong security features (such as application signing and
+  sandboxing), it would not be wise to skip those security tests!
+</p>
+<p>
+  Many apps today are filled with gaping vulnerabilities, especially those
+  originating from data storage and network communications.
+</p>
+<p>
+  Perhaps this is preaching to the choir though—since you’re reading this, you
+  probably already understand that, in today’s context, it’s extremely important
+  to ensure that your apps are secure. Providing users with the peace of mind
+  that their data and information are safe can go a long way, after all.
+</p>
+<p>
+  But before you begin trying to prevent these mistakes from being made, it’s
+  important to understand what they are in the first place!
+</p>
+<h3><strong>Five common vulnerabilities and how to prevent them</strong></h3>
+<p>
+  A good place to start would be with commonly-observed vulnerabilities in
+  mobile apps.
+</p>
+<p>
+  We’re going to be running through some case studies to demonstrate these, but
+  let’s first run through the testing methodology that we’ll be using (and
+  hopefully you’ll be too when building your app):
+</p>
+<p>
+  <strong>Static Analysis </strong>– Extracting the mobile application’s binary
+  and then reverse engineering it to examine the application. Some things we
+  might be looking for here include hard-coded credentials or leftover
+  development files from the binary.
+</p>
+<p>
+  <strong>Dynamic Analysis </strong>– Testing the mobile application’s
+  functionalities in real-time to examine any potential vulnerabilities. Testing
+  here might involve trying to circumvent security measures and detect logic
+  errors within the app.
+</p>
+<p>
+  With this in mind, let’s move on to the first of our five vulnerabilities (in
+  no particular order):
+</p>
+<h3><strong>1. Insecure data storage</strong></h3>
+<p>
+  As mentioned before, it’s easy to fall into the trap of thinking that modern
+  operating systems are secure enough that you don’t have to implement
+  additional security measures.
+</p>
+<p>
+  Insecure data storage occurs when developers operate on such beliefs and store
+  sensitive data in plaintext on client-side devices, allowing attackers to very
+  easily access sensitive data. Such data is often found in:
+</p>
+<ul>
+  <li><p>SQLite Databases</p></li>
+  <li><p>Log Files</p></li>
+  <li><p>Plist Files</p></li>
+  <li><p>Shared Preferences</p></li>
+  <li><p>XML Data stores or Manifest Files</p></li>
+  <li><p>Binary Data Stores</p></li>
+  <li><p>Cookie Stores</p></li>
+</ul>
+<p>
+  To illustrate this problem, we found a relatively popular application on the
+  Google Play Store with high ratings that claims to be a secure note-taking
+  application where you can store your passwords and sensitive details.
+</p>
+<p>
+  While testing this app, we were able to retrieve the user’s login information
+  to access the application. This information had been stored locally on the
+  device in the Shared Preferences file (which is easily recoverable), allowing
+  us to access <em>every</em> piece of sensitive data that the user had entered
+  into the app.
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/secret-question-and-answer.png" alt="A snapshot of the Shared Preferences file">
+</figure>
+
+<p>But it gets worse!</p>
+<p>
+  As we continued to test this app, it turned out that we never needed to obtain
+  the user’s login credentials at all. The secret information had also been
+  stored, completely unencrypted, in an SQL file; anyone with access to the
+  user’s phone could have very easily obtained this secret information.
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/SQL-info.png" alt="A snapshot of the SQL file">
+</figure>
+
+<p>Not so secure after all, it turns out.</p>
+<p><strong>How do I prevent this?</strong></p>
+<p>
+  Well, information should always be stored in the backend if possible, and if
+  the information <em>has</em> to be stored locally due to business requirements
+  or the like, it should always be encrypted—never stored in
+  plaintext!
+</p>
+<h3><strong>2. Insecure Direct Object Reference</strong></h3>
+<p>
+  Insecure Direct Object Reference (IDOR) is a type of access control
+  vulnerability where an app blindly accepts user-supplied inputs without
+  requiring additional validation of the user’s identity.
+</p>
+<p>
+  That’s kind of like allowing anyone with an ID pass to enter your
+  building…without checking if their faces match the pictures on their passes!
+</p>
+<p>
+  This allows attackers to gain unrestricted, unauthorised access to a user’s
+  data. In the worst of cases, this could happen for apps dealing with critical
+  information, which can then lead to data loss and illegitimate transactions.
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/app-server.png" alt="An illustration of the app communicating with the backend server">
+</figure>
+
+<p>
+  Today, most mobile applications require a good deal of communication with
+  backend servers. When API calls are made during transitions of states and user
+  data is retrieved from a backend server, users usually don’t see or interact
+  with this process.
+</p>
+<p>
+  It’s no wonder, then, that some developers overlook this and neglect to harden
+  their API, effectively creating a server-side vulnerability.
+</p>
+<p>Let’s have a look at how this works in practice.</p>
+<p>
+  We found an application that fetches appointment information based on a user’s
+  NRIC number. Below, you can see that the app uses a post-authentication fetch
+  to retrieve this information automatically (upon the user’s login), meaning
+  that the user can’t alter the API call at all.
+</p>
+<p><br /></p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/request-1.png" alt="Requesting information from the server">
+</figure>
+
+<figure style="text-align: center">
+  <img src="/assets/img/response-1.png" alt="Retrieving information from the server">
+</figure>
+
+<p>So far so good, right?</p>
+<p>
+  It soon became clear, however, that we could easily retrieve
+  <em>any other user’s</em> appointment information just by spoofing the NRIC
+  field.
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/request-2.png" alt="Requesting information from the server with a spoofed NRIC">
+</figure>
+
+<figure style="text-align: center">
+  <img src="/assets/img/response-2.png" alt="Retrieving another user's information from the server">
+</figure>
+
+<p>
+  Unfortunately, an attacker could easily enumerate NRIC numbers to obtain the
+  appointment details of any user they want in this manner.
+</p>
+<p><strong>How do I prevent this?</strong></p>
+<p>
+  As a developer, you should have your endpoints perform access control checks
+  on any requests for sensitive information. This way, you can be sure that the
+  user requesting that data is authorised to do so.
+</p>
+<h3><strong>3. Extraneous functionalities</strong></h3>
+<p>
+  When building complex apps and racing against harsh deadlines, it’s not
+  uncommon to leave in a few things and forget about them in the chaos of it
+  all.
+</p>
+<p>
+  That can sometimes be the fatal flaw of your app, however. When development or
+  testing functionalities and details (that aren’t intended for users) are
+  deployed to production, they can sometimes provide useful information for
+  attackers to reverse engineer your app and find further vulnerabilities.
+</p>
+<p>
+  Take this next app, for example. It’s a popular password manager app on the
+  iOS app store—the 3rd of 4th most-downloaded one, in fact.
+</p>
+<p>
+  While examining the code that performs user authentication, we found the
+  following vulnerability:
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/extraneous-functionality.png" alt="An interesting line of code within the deny logic of the app">
+</figure>
+
+<p>
+  During user authentication, a simple input that serves the function well
+  enough is
+  <em>‘if input matches stored password, then login, or else deny’</em>.
+  However, we found the highlighted line of code within the deny logic of the
+  password manager.
+</p>
+<p>
+  Using the hardcoded string of ‘<em>#06#</em>’, we can gain unauthorised entry
+  to the user’s stored credentials.
+</p>
+<p>But why is that even there?</p>
+<p>
+  We can only assume that this was a feature used to ease development that was
+  forgotten before they released the app. But thanks to this, anyone with the
+  knowledge of this backdoor can retrieve users’ stored passwords.
+</p>
+<p><strong>How do I prevent this?</strong></p>
+<p>
+  It’s simple, really, although it takes slightly more effort: you have to do
+  your due diligence and clean up all debugs and testing codes before shipping
+  the app out to production. This includes console logs, unused codes and
+  testing functionalities.
+</p>
+<h3><strong>4. Insecure client-side authentication</strong></h3>
+<p>
+  Insecure client-side authentication happens when authentication is performed
+  insecurely on the client-side app, such as with missing or poorly implemented
+  authentication protocols.
+</p>
+<p>
+  Attackers can exploit this by tampering with the application state to bypass
+  authentication and gain access to the app.
+</p>
+<p>
+  For this vulnerability, we identified an Android app that claims to hide a
+  user’s photos securely in a ‘photo locker’. It requires users to enter a PIN
+  code that they must first set in order to access their stored photos.
+</p>
+<p>Here’s a look at the app’s lockscreen:</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/lockscreen.png" alt="The lockscreen of the photo storage app">
+</figure>
+
+<p>
+  We obviously wouldn’t have access to our user’s PIN, so we first tried looking
+  for the pictures within the device:
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/encrypted-1.png" alt="Image files stored on the device.">
+</figure>
+
+<p>But as it happens, they’d all been encrypted.</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/encrypted-2.png" alt="Encrypted images on the device">
+</figure>
+
+<p>
+  So the next recourse for us was to go back to bypassing the authentication. To
+  understand how we could go about doing this, we first examined how the app’s
+  authentication works.
+</p>
+<p>
+  We did this by decompiling the app’s APK file and found that the app relies on
+  a function to check whether the PIN entered is the same as the PIN stored in
+  the device. If the PIN is the same as the one stored, the function returns
+  <strong>true</strong>. Otherwise, it returns<strong> false</strong>.
+</p>
+<p>
+  We relied on runtime tampering to ensure that the return value of the function
+  is always <strong>true</strong>.
+</p>
+<p>
+  Just in case you don’t know, runtime tampering is a technique used to modify
+  the code in the memory during runtime to manipulate the logical flow of the
+  app. Most of the time—and in this case as well—we modify the arguments parsed
+  into a certain function (or the return value of the function) so we can trick
+  the app into behaving in the way we want it to.
+</p>
+<p>
+  As you can see below, we successfully changed the return value of the PIN
+  checker to ensure that it’s always <strong>true</strong>, regardless of
+  whether the PIN entered matches the PIN stored or not.
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/Photo-locker-code.png" alt="Changing the return value of the PIN checker">
+</figure>
+
+<p>
+  We were then able to enter the app and retrieve all the private photos stored
+  by our user. Yikes.
+</p>
+<p><strong>How do I prevent this?</strong></p>
+<p>
+  You should first try to understand the local authentication scheme you’re
+  using thoroughly and attempt to look for loopholes before releasing the app.
+  Avoid storing passwords or tokens locally on the device itself as well, as
+  this might allow attackers to retrieve that information to bypass the app’s
+  authentication.
+</p>
+<p>
+  Alternatively and ideally, the best method you can use to prevent this is to
+  simply have authentication take place through a backend server instead of
+  trying to put it within the app.
+</p>
+<h3><strong>5. Code tampering</strong></h3>
+<p>
+  Malicious actors will often employ methods like this where they tamper with an
+  app’s critical business logic to change the application flow and bypass
+  security mechanisms to gain unrestricted access to the app.
+</p>
+<p>
+  This time, we looked at a Basic Theory Test app (which many young drivers are
+  probably familiar with). The app is free but displays ads, although this can
+  be disabled by paying for the full version. We noticed that two options were
+  provided for access to the full version:
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/unlock-1.png" alt="Attempting to restore the full version of the app without paying">
+</figure>
+
+<p>
+  Of course, when we attempted to click on the Restore Full Version button, we
+  were greeted with an error message (since we never did pay for it).
+</p>
+<p>How does the app check whether a user has purchased the app before?</p>
+<p>
+  We decompiled the app’s APK file to Java and then studied how it works from
+  the source code (this step isn’t technically necessary if you’re very
+  well-versed in Smali). Below, you can see the flag we found in the source code
+  that the app uses to determine whether it has been purchased before or not.
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/btt-java.png" alt="The app's APK file in Java">
+</figure>
+
+<p>
+  Then, we decompiled the file to Smali and modified the flag file in the
+  previous step to the value <strong>true</strong>. This tells the app that
+  we’ve legitimately purchased the full version.
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/btt-smali.png" alt="The app's APK file in Smali">
+</figure>
+
+<p>
+  Finally, we recompiled and signed the package so we could install it on our
+  device. And true enough:
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/unlock-2.png" alt="Successfully restoring the full version of the app without paying">
+</figure>
+
+<p><strong>How do I prevent this?</strong></p>
+<p>
+  To counter code tampering, implement the use of checksums to determine if an
+  app has been tampered with or not, both in the package and memory. You should
+  also run a robust check on whether the app runs in insecure environments (like
+  jailbroken or rooted devices) and then denying access to the app for them.
+</p>
+<p>
+  So far, we’ve looked at some of the common vulnerabilities and how to address
+  them. While a number of issues have been addressed, many of the points covered
+  can be summarised in these two key takeaways:
+</p>
+<ul>
+  <li>
+    <p>
+      Generally speaking, always assume the device an app runs on will be
+      compromised and work from there to ensure it is secure even in such
+      instances.
+    </p>
+  </li>
+  <li>
+    <p>
+      Sensitive information and operations should also be stored and conducted
+      on backend servers if possible.
+    </p>
+  </li>
+</ul>
+<h3><strong>Building secure mobile applications with OWASP</strong></h3>
+<p>
+  Now that we’ve gotten a better understanding of how to prevent these errors,
+  we can go a step further and introduce established standards with which we can
+  assess our mobile applications’ security hygiene.
+</p>
+<p>That’s where OWASP comes in.</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/OWASP.png" alt="The OWASP logo">
+  <figcaption>Image credit:
+      <a href="https://owasp.org" rel="noopener noreferrer nofollow"
+        >https://owasp.org</a></figcaption>
+</figure>
+
+</p>
+<p>
+  OWASP, or Open Web Application Security Project, is a global non-profit
+  organisation that focuses on software and hardware security mechanisms.
+</p>
+<p>
+  In case you’ve never heard of them, the organisation holds conferences and
+  conducts training on a worldwide scale for the purpose of educating users on
+  security-related matters. Some of the notable projects that they’ve undertaken
+  are:
+</p>
+<ul>
+  <li><p>OWASP Web Security Testing Guide (WSTG)</p></li>
+  <li><p>OWASP Mobile Security Testing Guide (MSTG)</p></li>
+  <li><p>OWASP Mobile Top 10</p></li>
+  <li>
+    <p>OWASP Mobile Application Security Verification Standard (MASVS)</p>
+  </li>
+</ul>
+<p>
+  Incidentally, we’ll be covering
+  <a
+    href="https://mobile-security.gitbook.io/masvs/"
+    rel="noopener noreferrer nofollow"
+    ><u>MASVS </u></a
+  >and
+  <a
+    href="https://mobile-security.gitbook.io/mobile-security-testing-guide/"
+    rel="noopener noreferrer nofollow"
+    ><u>MSTG </u></a
+  >today!
+</p>
+<h3><strong>Security standards with MASVS</strong></h3>
+<p>So, what is MASVS?</p>
+<p>
+  Quite simply, MASVS is a standard that defines the security requirements
+  applicable for mobile apps and their OS platforms.
+</p>
+<p>
+  These requirements offer a baseline for mobile application security hygiene,
+  and help developers to ensure that defense-in-depth measures and resiliency
+  protections are in place against client-side threats such as rooting,
+  jailbreaking and code tampering.
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/requirement-levels.png" alt="The various levels of app security requirements">
+</figure>
+
+<p>
+  As you can see above, the requirements are tiered into various levels that are
+  each suited to specific apps’ overall needs for security.
+</p>
+<ul>
+  <li>
+    <p>
+      L1 covers basic requirements for code quality, handling of sensitive data
+      and interactions with mobile applications. This applies to<strong>
+        all mobile apps</strong
+      >.
+    </p>
+  </li>
+  <li>
+    <p>
+      L2 introduces more advanced security controls that are relevant for any
+      <strong>apps dealing with PII</strong>—personally identifiable
+      information.
+    </p>
+  </li>
+  <li>
+    <p>
+      R, which stands for resiliency, outlines what steps should be taken for
+      apps to protect against mobile client-side attacks such as app tampering
+      and reverse engineering.
+      <strong>Game apps should adhere to L1 and R</strong> requirements (so
+      users can’t tamper with game scores, for instance), while<strong>
+        apps with sensitive data stored locally on devices should adopt L2 and
+        R.</strong
+      >
+    </p>
+  </li>
+</ul>
+
+<figure style="text-align: center">
+  <img src="/assets/img/checklist.png" alt="MASVS security verification checklist">
+  <figcaption>A checklist of one of MASVS's requirements</figcaption>
+</figure>
+
+<p><em>A checklist of one of MASVS’s requirements</em></p>
+<p>
+  Curious about where your app falls in all of this? Well, MASVS’s requirement
+  checklists (like the one above) provide a useful guide to see which levels of
+  requirements your app should adopt.
+</p>
+<p>
+  Moving on, though—how do we use MASVS? Three main ways you can adopt these
+  standards are:
+</p>
+<p>
+  <strong>As a metric</strong> – used by security researchers to evaluate the
+  security standards of your mobile application
+</p>
+<p>
+  <strong>As guidance</strong> –for developers during the development and
+  testing phases
+</p>
+<p>
+  <strong>As a procurement measure metric</strong> – for system owners to
+  provide a baseline for security verification when engaging vendors to perform
+  verifications on your app
+</p>
+<p>
+  Remember that not all requirements listed in MASVS are necessarily relevant to
+  your app! Evaluate the effectiveness of each requirement individually to
+  ensure that no additional effort is put into implementing an unnecessary
+  security feature.
+</p>
+<h3><strong>Thorough testing with MSTG</strong></h3>
+<p>
+  MSTG is a testing guide and checklist that helps to outline baseline security
+  requirements for your app.
+</p>
+<p>But wait! Isn’t that exactly the same as MASVS?</p>
+<p>
+  Not quite. MASVS serves a different need, as the requirements outlined in it
+  are used for an app’s planning and architecture design stages.
+</p>
+<p>
+  MSTG, however, describes the technical processes for developers and
+  penetration testers on how exactly to test components of an app. It’s a
+  technical manual that provides verification steps for each MASVS requirement
+  for a given mobile application. This includes technical evaluation guides for
+  app security via static and dynamic analyses.
+</p>
+<p>
+  Incidentally, every security weakness we found in the first section on common
+  vulnerabilities is tagged within MSTG under specific categories!
+</p>
+<p>
+  Speaking of tagging, the manual actually groups test cases into different
+  broad categories (such as network, resilience or authentication) under MSTG-ID
+  tags. Perhaps you can try to locate some of the aforementioned vulnerabilities
+  within these categories the next time you read it!
+</p>
+<p>Now, how do we use MSTG, exactly?</p>
+<p>
+  Within each MSTG-ID tag’s respective page is an overview that runs you through
+  what the test is and what the expected outcomes are. This is useful for your
+  reference if you need a broad understanding of the issues discussed before you
+  dive deeper into the technical aspects.
+</p>
+<p>
+  Further in is usually a static analysis section that contains the code
+  snippets showing how phones run checks and what best practices should be
+  adopted.
+</p>
+<p>
+  Finally, there's also a dynamic testing portion that outlines the exact steps
+  for conducting these tests using various open source tools and techniques, as
+  well as the expected outcomes of such tests.
+</p>
+<p>
+  You can see this reflected in the
+  <a
+    href="https://mobile-security.gitbook.io/mobile-security-testing-guide/ios-testing-guide/0x06j-testing-resiliency-against-reverse-engineering"
+    rel="noopener noreferrer nofollow"
+    ><u>MSTG iOS Anti-Reversing Defenses page</u></a
+  >
+  (MSTG-RESILIENCE-1). In it, we have our overview, followed by a static
+  analysis portion with the relevant code snippets of various jailbreak
+  detection techniques, and finally a dynamic analysis portion with a
+  step-by-step guide on how to bypass this jailbreak detection.
+</p>
+
+<figure style="text-align: center">
+  <img src="/assets/img/mstg-tags.png" alt="MSTG in the development cycle">
+  <figcaption>A look at the interoperability of MSTG and MASVS</figcaption>
+</figure>
+
+<p><em>A look at the interoperability of MSTG and MASVS</em></p>
+<p>
+  As you can see from the diagram, MSTG and MASVS are very much interoperable.
+  Adhering to MSTG, the relevant portion of our software development cycle could
+  look like this:
+</p>
+<p>
+  <strong>MASVS </strong>– We can first use MASVS as a list of security
+  requirements to ensure our app is secure by design.
+</p>
+<p>
+  <strong>RASP </strong>–Runtime Application Self-Protection tools can then be
+  used to detect and prevent real-time attacks (part of the MSTG Resilience
+  requirements)
+</p>
+<p>
+  <strong>SAST </strong>–Static Application Security Testing tools can be
+  employed to scan our app source code for any security vulnerabilities during
+  the app’s build time.
+</p>
+<p>
+  <strong>Mobile app security tools </strong>–Such tools are automated,
+  mobile-oriented tools that employ both static and dynamic tests to scan the
+  app binary and source code for mobile-specific security vulnerabilities. Use
+  them!
+</p>
+<p>
+  <strong>Manual PT </strong>–Finally, we can conduct manual penetration
+  tests—wherein we use tools and techniques an actual attacker might use—to
+  assess the app holistically.
+</p>
+<p>And that about sums up this section on MASVS and MSTG!</p>
+<p>But before you go...</p>
+<h3><strong>Some additional help</strong></h3>
+<p>We know that having more resources is always beneficial.</p>
+<p>
+  That’s why CSG also runs
+  <a href="https://medium.com/csg-govtech" rel="noopener noreferrer nofollow"
+    ><u>a Medium blog</u></a
+  >
+  that uploads weekly, technical articles on cyber security that
+  <em>might just</em> contain the insights you need for your latest
+  project.
+</p>
+<p>On that note, that’s all we have for you today. Thanks for reading!</p>
+<p></p>
+<p>
+  <em
+    >By GovTech’s Cyber Security Group and Technology Management Office (Michael
+    Tan).</em
+  >
+</p>
+<p><em>Published on 5 August 2020.</em></p>
+<p><br /></p>
