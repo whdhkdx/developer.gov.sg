@@ -75,6 +75,16 @@
     </script>
     {% endif %}
     {% seo %}
+
+    {% if page.custom_css %}
+      {% for css_link in page.custom_css %}
+      <link
+        href="{{ css_link }}"
+        rel="stylesheet"
+        type="text/css"
+      />
+      {% endfor %}
+    {% endif %}
   </head>
 
   <body>
