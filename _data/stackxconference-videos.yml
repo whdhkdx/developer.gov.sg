@@ -18,7 +18,7 @@
   id: '73xW6KuUOf4'
 - type: Keynote - VOD
   speakers: 'Sriram Narayanan'
-  speakers_title: 'Technology Principal, ThoughtWorkse'
+  speakers_title: 'Technology Principal, ThoughtWorks'
   title: 'The Journey to Continuous Delivery'
   id: 'yOGhrxKLLaE'
 - type: Keynote - VOD
@@ -85,7 +85,7 @@
   speakers: 'Abhijeet Menon, Sathappan Subramaniam'
   speakers_title: 'Senior Solution Architect, GovTech| Lead Project Manager, NCS'
   title: 'CI/CD Strategy to Modernisation for PA'
-  additional_link: IRAS - Stack 2020 - Presentation (Dec 2020) (Portal).pdf
+  id: '5weDrAjn_m4'
   
 - type: Government - Preamble
   speakers: 'Lim Bee Kwan'
