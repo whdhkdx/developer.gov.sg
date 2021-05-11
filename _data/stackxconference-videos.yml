@@ -10,17 +10,17 @@
   speakers: 'Kok Ping Soon'
   speakers_title: 'Chief Executive, GovTech'
   title: 'Welcome Remarks'
-  id: 'I97NvT5KvKY'
+  id: 'to6xbAPjzEk'
 - type: Keynote - VOD
   speakers: 'Chan Cheow Hoe'
   speakers_title: 'Government Chief Digital Technology Officer'
   title: 'CI/CD Shaping modernisation in Singapore Government'
-  id: '73xW6KuUOf4'
+  id: 'RlZCyexsJBc'
 - type: Keynote - VOD
   speakers: 'Sriram Narayanan'
   speakers_title: 'Technology Principal, ThoughtWorks'
   title: 'The Journey to Continuous Delivery'
-  id: 'yOGhrxKLLaE'
+  id: 'BLvLs5Fbn7g'
 - type: Keynote - VOD
   speakers: 'Kevin Ng'
   speakers_title: 'Director, CODEX, GovTech'
@@ -30,85 +30,35 @@
   speakers: 'Chia Hsiao Ming'
   speakers_title: 'Director, Engineering Productivity, GovTech'
   title: 'SHIP-HATS – Architecture Approach'
-  id: 'VCH_XQo4zX4'
+  id: 'yiD4--KSdTI'
 - type: Keynote - Live Chat
   speakers: 'Kevin Ng'
   speakers_title: 'Director, CODEX, GovTech'
   title: 'Fireside Chat With Agencies'
-  id: '6DWGsShArlM'
-  
-- type: Leader - VOD
-  speakers: 'Tan Eng Pheng'
-  speakers_title: 'Assistant Chief Executive, GovTech'
-  title: 'Modernise Application Delivery'
-  id: 'nQBOAyb3288'
-- type: Leader - VOD
-  speakers: 'Chai Chin Loon'
-  speakers_title: 'Senior Director, Cyber Security Group & Government Chief Information Security Officer, GovTech'
-  title: 'The Security Principles in CI/CD'
-  id: 'l09v1iSz2ME'
-- type: Leader - Live Chat
-  speakers: 'Tan Eng Pheng, Chai Chin Loon, Kevin Ng'
-  speakers_title: 'Assistant Chief Executive, GovTech| 
-    Senior Director, Cyber Security Group & Government Chief Information Security Officer, GovTech| 
-    Director, CODEX, GovTech'
-  title: 'Q&A with GovTech'
-  id: 'JB-yc50yUnI'
-- type: Leader - VOD
-  speakers: 'Kevin Ng'
-  speakers_title: 'Director, CODEX, GovTech'
-  title: 'Closing & Next Steps'
-  id: 'aTBJqQ385Jc'
-  
-  
+  id: 'cPw6l7-CAjw'
+   
 - type: Product - VOD
   speakers: 'Linda Chang'
   speakers_title: 'Assistant Director, GovTech'
   title: 'SHIP-HATS Overview For Newbies'
-  id: 'uE61CJnAWeA'
+  id: 'oqqM1Q25b-0'
 - type: Product - VOD
   speakers: 'Goh Chun Teck'
   speakers_title: 'Software Engineer, GovTech'
   title: 'Security Testing With SHIP-HATS'
-  id: '6-oA_RQjJEw'
+  id: 'SVomPCqKGM4'
 - type: Product - VOD
   speakers: 'Hudson Lee'
   speakers_title: 'Lead DevOps Engineer, GovTech'
   title: 'Continuous Delivery With SHIP-HATS'
-  id: 'v7Sr5LLaqjE'
+  id: 'DMMhqLKHLx0'
 - type: Product - VOD
   speakers: 'Chew Pei Yi'
   speakers_title: 'Associate Delivery Manager, GovTech'
   title: 'Understanding SHIP-HATS Subscription'
-  id: '5weDrAjn_m4'
+  id: 'ksUEnR78m4w'
 - type: Product - VOD
   speakers: 'Abhijeet Menon, Sathappan Subramaniam'
   speakers_title: 'Senior Solution Architect, GovTech| Lead Project Manager, NCS'
   title: 'CI/CD Strategy to Modernisation for PA'
-  id: '5weDrAjn_m4'
-  
-- type: Government - Preamble
-  speakers: 'Lim Bee Kwan'
-  speakers_title: 'Assistant Chief Executive, GovTech'
-  title: 'Opening Address'
-  id: '8deQC0Hz8UQ'
-- type: Government - VOD
-  speakers: 'Chong Rong Hwa'
-  speakers_title: 'Director, Advanced Cybersecurity Capabilities, GovTech'
-  title: 'Applying Security in DevOps Practices'
-  id: 'PqMtPTYLz18'
-- type: Government - VOD
-  speakers: 'Aaron Ma, Louis Lim, Liyana Muhammad Fauzi'
-  speakers_title: 'Deputy Director, GovTech| Assistant General Counsel, GovTech| Senior Product Manager, GovTech'
-  title: 'Pricing, Budgeting & Contracting For SHIP-HATS'
-  id: 'gUmixpR528w'
-- type: Government - VOD
-  speakers: 'Goh Boon Nam'
-  speakers_title: 'Digital Agility Practice and Deputy Director, Executive Education Programme NUS-ISS'
-  title: 'Preparing Your Team to Adopt DevOps'
-  id: 'nIuIs6YWrM0'
-- type: Government - VOD
-  speakers: 'Denise Collard'
-  speakers_title: 'Product Manager, GovTech'
-  title: 'Onboarding SHIP-HATS'
-  id: 'dAAQJcvftAM'
+  id: '-eRz5zdtElE'
